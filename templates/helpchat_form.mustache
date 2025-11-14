@@ -1,0 +1,19 @@
+<form id="helpchat-form" method="post" action="#">
+    <div class="helpchat-container">
+        <textarea name="helpchat_message" id="helpchat-message" placeholder="{{messageplaceholder}}" class="helpchat-textarea" rows="5"></textarea>
+        <br>
+        <button type="submit" class="helpchat-submit btn btn-primary">{{submitbutton}}</button>
+    </div>
+</form>
+{{#response}}
+<div class="helpchat-response">
+    <h5>Response:</h5>
+    <p>{{response}}</p>
+</div>
+{{/response}}
+<style>
+    .helpchat-container { margin: 10px 0; }
+    .helpchat-textarea { width: 100%; padding: 8px; box-sizing: border-box; }
+    .helpchat-submit { margin-top: 10px; }
+    .helpchat-response { margin-top: 15px; padding: 10px; background-color: #f5f5f5; border-radius: 4px; }
+</style>
