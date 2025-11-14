@@ -18,7 +18,7 @@
  * Help Chat block.
  *
  * @package    block_helpchat
- * @copyright  2025 Your Name <your@email.com>
+ * @copyright  2025 Marcus Green
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
  * Help Chat block class.
  *
  * @package    block_helpchat
- * @copyright  2025 Your Name <your@email.com>
+ * @copyright  2025 Marcus Green
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_helpchat extends block_base {
@@ -103,11 +103,11 @@ class block_helpchat extends block_base {
      */
     public function perform_request(string $usermessage, string $purpose = 'helpchat'): string {
         global $CFG, $USER;
-        
+
         if (defined('BEHAT_SITE_RUNNING') || (defined('PHPUNIT_TEST') && PHPUNIT_TEST)) {
             return "AI Response to: " . $usermessage;
         }
-        
+
         // Get the prompt from block instance configuration
         $prompt = '';
         if (!empty($this->config->prompt)) {
@@ -119,7 +119,7 @@ class block_helpchat extends block_base {
                 $prompt = $globalprompt;
             }
         }
-        
+
         // Combine prompt with user message
         $fullprompt = '';
         if (!empty($prompt)) {
@@ -127,13 +127,13 @@ class block_helpchat extends block_base {
         } else {
             $fullprompt = $usermessage;
         }
-        
+
         // Try to get backend from config or use a default
         $backend = get_config('block_helpchat', 'backend');
         if (empty($backend)) {
             $backend = 'core_ai_subsystem'; // Default to core AI subsystem
         }
-        
+
         if ($backend == 'local_ai_manager' && class_exists('local_ai_manager\manager')) {
             $manager = new local_ai_manager\manager($purpose);
             $llmresponse = (object) $manager->perform_request($fullprompt, 'block_helpchat', $this->context->id);
@@ -174,7 +174,7 @@ class block_helpchat extends block_base {
             $llmresponse = $ai->prompt_completion($fullprompt);
             return $llmresponse['response']['choices'][0]['message']['content'];
         }
-        
+
         // Fallback to simple response if no backend is configured
         return "AI response to: " . $fullprompt;
     }

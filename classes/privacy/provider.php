@@ -15,41 +15,31 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Form for editing Help Chat block instances.
+ * Privacy provider for the helpchat block.
  *
  * @package    block_helpchat
  * @copyright  2025 Your Name <your@email.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-// Require the base block form class
-require_once(__DIR__ . '/edit_form.php');
+namespace block_helpchat\privacy;
 
 /**
- * Form for editing Help Chat block instances.
+ * Privacy provider for the helpchat block.
  *
- * @package    block_helpchat
  * @copyright  2025 Your Name <your@email.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class block_helpchat_edit_form extends block_edit_form {
+class provider implements
+        // This plugin does not store any personal data.
+        \core_privacy\local\metadata\null_provider {
 
     /**
-     * Extends the configuration form for the block.
+     * Returns lang string to explain why this plugin stores no data.
      *
-     * @param MoodleQuickForm $mform The form being built
+     * @return  string
      */
-    protected function specific_definition($mform) {
-        // Section header title.
-        $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
-
-        // Prompt field.
-        $mform->addElement('textarea', 'config_prompt', get_string('prompt', 'block_helpchat'), 
-            array('rows' => 5, 'cols' => 50));
-        $mform->setType('config_prompt', PARAM_TEXT);
-        $mform->setDefault('config_prompt', get_string('defaultprompt', 'block_helpchat'));
-        $mform->addHelpButton('config_prompt', 'prompt', 'block_helpchat');
+    public static function get_reason(): string {
+        return 'privacy:metadata';
     }
 }
