@@ -25,7 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 // Require the base block form class
-require_once(__DIR__ . '/edit_form.php');
+require_once($CFG->dirroot . '/blocks/moodleblock.class.php');
+require_once($CFG->libdir . '/formslib.php');
 
 /**
  * Form for editing Help Chat block instances.

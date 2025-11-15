@@ -46,7 +46,7 @@ class block_helpchat extends block_base {
      * @return stdClass The content
      */
     public function get_content() {
-        global $CFG, $USER, $COURSE;
+        global $CFG, $USER, $COURSE, $PAGE;
 
         if ($this->content !== null) {
             return $this->content;
@@ -56,13 +56,16 @@ class block_helpchat extends block_base {
         $this->content->text = '';
         $this->content->footer = '';
 
+        // Detect if we're in a question editing context
+        $is_question_editing = $this->is_question_editing_context();
+
         // Process form submission if there is one
         $response = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['helpchat_message'])) {
             $message = trim($_POST['helpchat_message']);
             if (!empty($message)) {
                 try {
-                    $response = $this->perform_request($message, 'helpchat');
+                    $response = $this->perform_request($message, 'helpchat', $is_question_editing);
                 } catch (Exception $e) {
                     $response = get_string('errorprocessingrequest', 'block_helpchat');
                 }
@@ -73,7 +76,8 @@ class block_helpchat extends block_base {
         $templatedata = [
             'messageplaceholder' => get_string('messageplaceholder', 'block_helpchat'),
             'submitbutton' => get_string('submitbutton', 'block_helpchat'),
-            'response' => $response
+            'response' => $response,
+            'isquestionediting' => $is_question_editing
         ];
 
         // Render the Mustache template
@@ -98,10 +102,11 @@ class block_helpchat extends block_base {
      *
      * @param string $usermessage The user message to send to the LLM
      * @param string $purpose The purpose of the request
+     * @param bool $is_question_editing Whether we're in a question editing context
      * @return string The response from the LLM
      * @throws moodle_exception
      */
-    public function perform_request(string $usermessage, string $purpose = 'helpchat'): string {
+    public function perform_request(string $usermessage, string $purpose = 'helpchat', bool $is_question_editing = false): string {
         global $CFG, $USER;
 
         if (defined('BEHAT_SITE_RUNNING') || (defined('PHPUNIT_TEST') && PHPUNIT_TEST)) {
@@ -113,10 +118,15 @@ class block_helpchat extends block_base {
         if (!empty($this->config->prompt)) {
             $prompt = $this->config->prompt;
         } else {
-            // Fallback to global config prompt
-            $globalprompt = get_config('block_helpchat', 'prompt');
-            if (!empty($globalprompt)) {
-                $prompt = $globalprompt;
+            // Use question editing prompt if in question editing context
+            if ($is_question_editing) {
+                $prompt = get_string('questioneditingprompt', 'block_helpchat');
+            } else {
+                // Fallback to global config prompt
+                $globalprompt = get_config('block_helpchat', 'prompt');
+                if (!empty($globalprompt)) {
+                    $prompt = $globalprompt;
+                }
             }
         }
 
@@ -180,6 +190,36 @@ class block_helpchat extends block_base {
     }
 
     /**
+     * Check if we're in a question editing context.
+     *
+     * @return bool True if in question editing context
+     */
+    protected function is_question_editing_context() {
+        global $PAGE;
+        
+        $pagetype = $PAGE->pagetype ?? '';
+        
+        // Check for question editing page types
+        if (preg_match('/^question-/', $pagetype) || 
+            preg_match('/^admin-/', $pagetype) ||
+            strpos($pagetype, 'question') !== false) {
+            return true;
+        }
+        
+        // Check URL patterns that indicate question editing
+        $url = $PAGE->url ?? null;
+        if ($url && $url instanceof moodle_url) {
+            $path = $url->get_path();
+            if (strpos($path, '/question/edit') !== false || 
+                strpos($path, '/question/bank') !== false) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    /**
      * Define where this block can be used.
      *
      * @return array
@@ -189,7 +229,9 @@ class block_helpchat extends block_base {
             'site-index' => true,
             'course-view' => true,
             'my' => true,
-            'page' => true
+            'page' => true,
+            'question-*' => true,
+            'admin-*' => true
         );
     }
 

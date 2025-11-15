@@ -58,4 +58,54 @@ final class block_helpchat_test extends advanced_testcase {
         // Verify the title comes from the language string
         $this->assertEquals(get_string('pluginname', 'block_helpchat'), $block->title);
     }
+
+    /**
+     * Test that the block can be added to question editing pages.
+     */
+    public function test_applicable_formats_include_question_editing(): void {
+        $this->resetAfterTest();
+        $this->setAdminUser();
+
+        $block = new block_helpchat();
+        $applicable_formats = $block->applicable_formats();
+        
+        // Test that question editing formats are supported
+        $this->assertTrue($applicable_formats['question-*']);
+        $this->assertTrue($applicable_formats['admin-*']);
+        $this->assertTrue($applicable_formats['page']);
+        $this->assertTrue($applicable_formats['course-view']);
+    }
+
+    /**
+     * Test question editing context detection.
+     */
+    public function test_question_editing_context_detection(): void {
+        $this->resetAfterTest();
+        $this->setAdminUser();
+
+        $block = new block_helpchat();
+        
+        // Mock page object for question editing context
+        $mock_page = $this->createMock(stdClass::class);
+        $mock_page->pagetype = 'question-type-multichoice';
+        $mock_page->url = new \moodle_url('/question/edit.php');
+        
+        // Replace global PAGE temporarily
+        global $PAGE;
+        $original_page = $PAGE;
+        $PAGE = $mock_page;
+        
+        try {
+            // Test reflection to access private method
+            $reflection = new \ReflectionClass($block);
+            $method = $reflection->getMethod('is_question_editing_context');
+            $method->setAccessible(true);
+            
+            $result = $method->invoke($block);
+            $this->assertTrue($result);
+        } finally {
+            // Restore original PAGE
+            $PAGE = $original_page;
+        }
+    }
 }

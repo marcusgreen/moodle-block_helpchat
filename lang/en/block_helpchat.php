@@ -36,3 +36,4 @@ $string['prompt'] = 'System Prompt';
 $string['prompt_help'] = 'This text will be prepended to all user messages before sending to the AI. Use this to provide context or instructions to the AI.';
 $string['prompt_desc'] = 'This text will be prepended to all user messages before sending to the AI. Use this to provide context or instructions to the AI.';
 $string['defaultprompt'] = 'You are a helpful assistant in a learning management system. Please provide helpful and educational responses.';
+$string['questioneditingprompt'] = 'You are an AI assistant helping with question editing in a learning management system. Provide helpful feedback on question quality, suggest improvements, check for clarity and educational value, and ensure questions align with learning objectives.';
