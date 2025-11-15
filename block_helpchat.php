@@ -24,6 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+// Include the form class
+require_once($CFG->dirroot . '/blocks/helpchat/classes/form/helpchat_form.php');
+
 /**
  * Help Chat block class.
  *
@@ -61,14 +64,22 @@ class block_helpchat extends block_base {
 
         // Process form submission if there is one
         $response = '';
+        
+        // Only process form if this is a POST request
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['helpchat_message'])) {
-            $message = trim($_POST['helpchat_message']);
-            if (!empty($message)) {
-                try {
-                    $response = $this->perform_request($message, 'helpchat', $is_question_editing);
-                } catch (Exception $e) {
-                    $response = get_string('errorprocessingrequest', 'block_helpchat');
+            $form = new \block_helpchat\form\helpchat_form();
+            if ($form->is_submitted()) {
+                if ($form->is_validated()) {
+                    $data = $form->get_data();
+                    if (!empty($data->helpchat_message)) {
+                        try {
+                            $response = $this->perform_request($data->helpchat_message, 'helpchat', $is_question_editing);
+                        } catch (Exception $e) {
+                            $response = get_string('errorprocessingrequest', 'block_helpchat');
+                        }
+                    }
                 }
+                // If form is not valid, we still want to display it with errors
             }
         }
 
@@ -81,20 +92,30 @@ class block_helpchat extends block_base {
         ];
 
         // Render the Mustache template
-        $this->content->text = $this->render_helpchat_form($templatedata);
+        $this->content->text = $this->render_helpchat_form($templatedata, $is_question_editing);
 
         return $this->content;
     }
 
-    /**
+/**
      * Render the helpchat form using a Mustache template.
      *
      * @param array $data The data to pass to the template
+     * @param bool $isquestionediting Whether we're in question editing context
      * @return string The rendered HTML
      */
-    protected function render_helpchat_form($data) {
+    protected function render_helpchat_form($data, $isquestionediting = false) {
         global $OUTPUT;
-            // Make DOM parser globally accessible for console usage
+        
+        // Create and setup the form with question editing context
+        $form = new \block_helpchat\form\helpchat_form(null, array('isquestionediting' => $isquestionediting));
+        
+        // Render the form
+        ob_start();
+        $form->display();
+        $formhtml = ob_get_clean();
+
+        // Make DOM parser globally accessible for console usage
         $this->page->requires->js_call_amd(
             'block_helpchat/dom_parser',
             'makeGloballyAccessible'
@@ -105,7 +126,10 @@ class block_helpchat extends block_base {
             ['form-analysis-data']
         );
 
-        return $OUTPUT->render_from_template('block_helpchat/helpchat_form', $data);
+        // Render the template (without the prompt since it's in the form now)
+        $templatehtml = $OUTPUT->render_from_template('block_helpchat/helpchat_form', $data);
+        
+        return $formhtml . $templatehtml;
     }
 
     /**
