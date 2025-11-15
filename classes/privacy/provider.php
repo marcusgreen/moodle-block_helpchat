@@ -18,7 +18,7 @@
  * Privacy provider for the helpchat block.
  *
  * @package    block_helpchat
- * @copyright  2025 Your Name <your@email.com>
+ * @copyright  2025 Marcus Green
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,7 +27,7 @@ namespace block_helpchat\privacy;
 /**
  * Privacy provider for the helpchat block.
  *
- * @copyright  2025 Your Name <your@email.com>
+ * @copyright  2025 Marcus Green
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements

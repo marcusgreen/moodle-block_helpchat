@@ -18,7 +18,7 @@
  * Form for editing Help Chat block instances.
  *
  * @package    block_helpchat
- * @copyright  2025 Your Name <your@email.com>
+ * @copyright  2025 Marcus Green
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -32,7 +32,7 @@ require_once($CFG->libdir . '/formslib.php');
  * Form for editing Help Chat block instances.
  *
  * @package    block_helpchat
- * @copyright  2025 Your Name <your@email.com>
+ * @copyright  2025 Marcus Green
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_helpchat_edit_form extends block_edit_form {
