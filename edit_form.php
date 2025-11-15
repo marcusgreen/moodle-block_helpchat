@@ -43,11 +43,12 @@ class block_helpchat_edit_form extends block_edit_form {
      * @param MoodleQuickForm $mform The form being built
      */
     protected function specific_definition($mform) {
+        xdebug_break();
         // Section header title.
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
 
         // Prompt field.
-        $mform->addElement('textarea', 'config_prompt', get_string('prompt', 'block_helpchat'), 
+        $mform->addElement('textarea', 'config_prompt', get_string('prompt', 'block_helpchat'),
             array('rows' => 5, 'cols' => 50));
         $mform->setType('config_prompt', PARAM_TEXT);
         $mform->setDefault('config_prompt', get_string('defaultprompt', 'block_helpchat'));

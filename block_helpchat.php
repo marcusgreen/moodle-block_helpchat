@@ -47,11 +47,10 @@ class block_helpchat extends block_base {
      */
     public function get_content() {
         global $CFG, $USER, $COURSE, $PAGE;
-
         if ($this->content !== null) {
             return $this->content;
         }
-
+        xdebug_break();
         $this->content = new stdClass();
         $this->content->text = '';
         $this->content->footer = '';
@@ -61,14 +60,14 @@ class block_helpchat extends block_base {
 
         // Process form submission if there is one
         $response = '';
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['helpchat_message'])) {
-            $message = trim($_POST['helpchat_message']);
-            if (!empty($message)) {
-                try {
-                    $response = $this->perform_request($message, 'helpchat', $is_question_editing);
-                } catch (Exception $e) {
-                    $response = get_string('errorprocessingrequest', 'block_helpchat');
-                }
+
+        $message = optional_param('helpchat_message', '', PARAM_TEXT);
+
+        if (!empty($message)) {
+            try {
+                $response = $this->perform_request($message, 'helpchat', $is_question_editing);
+            } catch (Exception $e) {
+                $response = get_string('errorprocessingrequest', 'block_helpchat');
             }
         }
 
@@ -85,7 +84,6 @@ class block_helpchat extends block_base {
 
         return $this->content;
     }
-
     /**
      * Render the helpchat form using a Mustache template.
      *
@@ -196,26 +194,26 @@ class block_helpchat extends block_base {
      */
     protected function is_question_editing_context() {
         global $PAGE;
-        
+
         $pagetype = $PAGE->pagetype ?? '';
-        
+
         // Check for question editing page types
-        if (preg_match('/^question-/', $pagetype) || 
+        if (preg_match('/^question-/', $pagetype) ||
             preg_match('/^admin-/', $pagetype) ||
             strpos($pagetype, 'question') !== false) {
             return true;
         }
-        
+
         // Check URL patterns that indicate question editing
         $url = $PAGE->url ?? null;
         if ($url && $url instanceof moodle_url) {
             $path = $url->get_path();
-            if (strpos($path, '/question/edit') !== false || 
+            if (strpos($path, '/question/edit') !== false ||
                 strpos($path, '/question/bank') !== false) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
