@@ -94,6 +94,17 @@ class block_helpchat extends block_base {
      */
     protected function render_helpchat_form($data) {
         global $OUTPUT;
+            // Make DOM parser globally accessible for console usage
+        $this->page->requires->js_call_amd(
+            'block_helpchat/dom_parser',
+            'makeGloballyAccessible'
+        );
+        $this->page->requires->js_call_amd(
+            'block_helpchat/form_integration',
+            'initFormIntegration',
+            ['form-analysis-data']
+        );
+
         return $OUTPUT->render_from_template('block_helpchat/helpchat_form', $data);
     }
 
@@ -196,26 +207,26 @@ class block_helpchat extends block_base {
      */
     protected function is_question_editing_context() {
         global $PAGE;
-        
+
         $pagetype = $PAGE->pagetype ?? '';
-        
+
         // Check for question editing page types
-        if (preg_match('/^question-/', $pagetype) || 
+        if (preg_match('/^question-/', $pagetype) ||
             preg_match('/^admin-/', $pagetype) ||
             strpos($pagetype, 'question') !== false) {
             return true;
         }
-        
+
         // Check URL patterns that indicate question editing
         $url = $PAGE->url ?? null;
         if ($url && $url instanceof moodle_url) {
             $path = $url->get_path();
-            if (strpos($path, '/question/edit') !== false || 
+            if (strpos($path, '/question/edit') !== false ||
                 strpos($path, '/question/bank') !== false) {
                 return true;
             }
         }
-        
+
         return false;
     }
 

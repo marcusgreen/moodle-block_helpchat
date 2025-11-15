@@ -1,11 +1,17 @@
 <form id="helpchat-form" method="post" action="#">
-    <div class="helpchat-container">
+     <input type="textarea" name="form_analysis_data" id="form-analysis-data" value="">
+     <div class="helpchat-container">
         {{#isquestionediting}}
         <div class="helpchat-context-info" style="background-color: #e7f3ff; border-left: 4px solid #0066cc; padding: 8px; margin-bottom: 10px; font-size: 0.9em;">
             <strong>Question Editing Mode:</strong> You can ask for help with question quality, clarity, educational value, and alignment with learning objectives.
         </div>
         {{/isquestionediting}}
-        <textarea name="helpchat_message" id="helpchat-message" placeholder="{{messageplaceholder}}" class="helpchat-textarea" rows="5"></textarea>
+        <textarea name="helpchat_message" id="helpchat-message" placeholder="{{messageplaceholder}}" class="helpchat-textarea" rows="5">
+
+        </textarea>
+            <span class="block_helpchatt-sparkles-icon">
+                {{#pix}} sparkles, block_helpchat {{/pix}}
+            </span>
         <br>
         <button type="submit" class="helpchat-submit btn btn-primary">{{submitbutton}}</button>
     </div>
