@@ -61,7 +61,6 @@ class block_helpchat extends block_base {
         $response = '';
         $message = optional_param('helpchat_message', '', PARAM_TEXT);
         $formdata = optional_param('form_analysis_data', '', PARAM_TEXT);
-
         if (!empty($message)) {
             try {
                 $response = $this->perform_request($message, 'helpchat', $is_question_editing);
@@ -74,6 +73,7 @@ class block_helpchat extends block_base {
         $templatedata = [
             'messageplaceholder' => get_string('messageplaceholder', 'block_helpchat'),
             'submitbutton' => get_string('submitbutton', 'block_helpchat'),
+            'message' => $message,
             'response' => $response,
             'isquestionediting' => $is_question_editing
         ];
