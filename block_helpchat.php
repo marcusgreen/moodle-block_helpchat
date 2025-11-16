@@ -67,6 +67,12 @@ class block_helpchat extends block_base {
                 $fullprompt = $this->prepare_prompt($message, $questionediting);
                 $fullprompt = 'formdata is :' . $formdata . ':' . $fullprompt;
                 $response = $this->perform_request($fullprompt, 'helpchat');
+                
+                // Convert markdown to HTML if response contains markdown
+                if (!empty($response)) {
+                    require_once($CFG->libdir . '/weblib.php');
+                    $response = markdown_to_html($response);
+                }
             } catch (Exception $e) {
                 $response = get_string('errorprocessingrequest', 'block_helpchat');
             }

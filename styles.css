@@ -55,3 +55,51 @@ block_helpchat .message_agent {
     margin-right: 5px;
 }
 
+/* Markdown response styling */
+.helpchat-response h1 {
+    font-size: 1.5em;
+    margin: 0.5em 0;
+}
+
+.helpchat-response h2 {
+    font-size: 1.3em;
+    margin: 0.5em 0;
+}
+
+.helpchat-response h3 {
+    font-size: 1.1em;
+    margin: 0.5em 0;
+}
+
+.helpchat-response ul, .helpchat-response ol {
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+}
+
+.helpchat-response li {
+    margin: 0.2em 0;
+}
+
+.helpchat-response pre {
+    background-color: #eee;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.helpchat-response code {
+    background-color: #eee;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.helpchat-response pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+.helpchat-response a {
+    color: #0066cc;
+    text-decoration: underline;
+}
+
