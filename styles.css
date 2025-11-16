@@ -38,7 +38,7 @@ block_helpchat .message_agent {
 .helpchat-message-display {
     margin-top: 15px;
     padding: 10px;
-    background-color: #a59494;
+    background-color: #e3dddd;
     border-radius: 4px;
     border-left: 4px solid #ccc;
 }

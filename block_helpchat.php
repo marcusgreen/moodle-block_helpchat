@@ -55,7 +55,7 @@ class block_helpchat extends block_base {
         $this->content->footer = '';
 
         // Detect if we're in a question editing context
-        $is_question_editing = $this->is_question_editing_context();
+        $questionediting = $this->is_question_editing_context();
 
         // Process form submission if there is one
         $response = '';
@@ -63,7 +63,9 @@ class block_helpchat extends block_base {
         $formdata = optional_param('form_analysis_data', '', PARAM_TEXT);
         if (!empty($message)) {
             try {
-                $response = $this->perform_request($message, 'helpchat', $is_question_editing);
+                // Prepare the full prompt with system instructions
+                $fullprompt = $this->prepare_prompt($message, $questionediting);
+                $response = $this->perform_request($fullprompt, 'helpchat');
             } catch (Exception $e) {
                 $response = get_string('errorprocessingrequest', 'block_helpchat');
             }
@@ -75,7 +77,7 @@ class block_helpchat extends block_base {
             'submitbutton' => get_string('submitbutton', 'block_helpchat'),
             'message' => $message,
             'response' => $response,
-            'isquestionediting' => $is_question_editing
+            'isquestionediting' => $questionediting
         ];
 
         // Render the Mustache template
@@ -83,6 +85,43 @@ class block_helpchat extends block_base {
 
         return $this->content;
     }
+    
+    /**
+     * Prepare the full prompt by combining system prompt with user message.
+     *
+     * @param string $usermessage The user message
+     * @param bool $questionediting Whether we're in a question editing context
+     * @return string The prepared full prompt
+     */
+    protected function prepare_prompt(string $usermessage, bool $questionediting = false): string {
+        // Get the prompt from block instance configuration
+        $prompt = '';
+        if (!empty($this->config->config_prompt)) {
+            $prompt = $this->config->config_prompt;
+        } else {
+            // Use question editing prompt if in question editing context
+            if ($questionediting) {
+                $prompt = get_string('questioneditingprompt', 'block_helpchat');
+            } else {
+                // Fallback to global config prompt
+                $globalprompt = get_config('block_helpchat', 'prompt');
+                if (!empty($globalprompt)) {
+                    $prompt = $globalprompt;
+                }
+            }
+        }
+
+        // Combine prompt with user message
+        $fullprompt = '';
+        if (!empty($prompt)) {
+            $fullprompt = $prompt . "\n\n" . $usermessage;
+        } else {
+            $fullprompt = $usermessage;
+        }
+        
+        return $fullprompt;
+    }
+
     /**
      * Render the helpchat form using a Mustache template.
      *
@@ -107,42 +146,16 @@ class block_helpchat extends block_base {
     /**
      * Perform a request to the LLM system.
      *
-     * @param string $usermessage The user message to send to the LLM
+     * @param string $fullprompt The complete prompt (system + user message)
      * @param string $purpose The purpose of the request
-     * @param bool $is_question_editing Whether we're in a question editing context
      * @return string The response from the LLM
      * @throws moodle_exception
      */
-    public function perform_request(string $usermessage, string $purpose = 'helpchat', bool $is_question_editing = false): string {
+    public function perform_request(string $fullprompt, string $purpose = 'helpchat'): string {
         global $CFG, $USER;
 
         if (defined('BEHAT_SITE_RUNNING') || (defined('PHPUNIT_TEST') && PHPUNIT_TEST)) {
-            return "AI Response to: " . $usermessage;
-        }
-
-        // Get the prompt from block instance configuration
-        $prompt = '';
-        if (!empty($this->config->prompt)) {
-            $prompt = $this->config->prompt;
-        } else {
-            // Use question editing prompt if in question editing context
-            if ($is_question_editing) {
-                $prompt = get_string('questioneditingprompt', 'block_helpchat');
-            } else {
-                // Fallback to global config prompt
-                $globalprompt = get_config('block_helpchat', 'prompt');
-                if (!empty($globalprompt)) {
-                    $prompt = $globalprompt;
-                }
-            }
-        }
-
-        // Combine prompt with user message
-        $fullprompt = '';
-        if (!empty($prompt)) {
-            $fullprompt = $prompt . "\n\n" . $usermessage;
-        } else {
-            $fullprompt = $usermessage;
+            return "AI Response to: " . $fullprompt;
         }
 
         // Try to get backend from config or use a default
