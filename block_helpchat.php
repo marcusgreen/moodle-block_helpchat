@@ -65,6 +65,7 @@ class block_helpchat extends block_base {
             try {
                 // Prepare the full prompt with system instructions
                 $fullprompt = $this->prepare_prompt($message, $questionediting);
+                $fullprompt = 'formdata is :' . $formdata . ':' . $fullprompt;
                 $response = $this->perform_request($fullprompt, 'helpchat');
             } catch (Exception $e) {
                 $response = get_string('errorprocessingrequest', 'block_helpchat');
@@ -85,7 +86,7 @@ class block_helpchat extends block_base {
 
         return $this->content;
     }
-    
+
     /**
      * Prepare the full prompt by combining system prompt with user message.
      *
@@ -118,7 +119,7 @@ class block_helpchat extends block_base {
         } else {
             $fullprompt = $usermessage;
         }
-        
+
         return $fullprompt;
     }
 
@@ -270,6 +271,15 @@ class block_helpchat extends block_base {
      * @return bool
      */
     public function instance_allow_config() {
+        return true;
+    }
+
+    /**
+     * Required to override
+     *
+     * @return bool
+     */
+    public function has_config() {
         return true;
     }
 }
