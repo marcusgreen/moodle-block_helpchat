@@ -50,7 +50,6 @@ class block_helpchat extends block_base {
         if ($this->content !== null) {
             return $this->content;
         }
-        xdebug_break();
         $this->content = new stdClass();
         $this->content->text = '';
         $this->content->footer = '';
@@ -60,8 +59,8 @@ class block_helpchat extends block_base {
 
         // Process form submission if there is one
         $response = '';
-
         $message = optional_param('helpchat_message', '', PARAM_TEXT);
+        $formdata = optional_param('form_analysis_data', '', PARAM_TEXT);
 
         if (!empty($message)) {
             try {
@@ -91,7 +90,17 @@ class block_helpchat extends block_base {
      * @return string The rendered HTML
      */
     protected function render_helpchat_form($data) {
-        global $OUTPUT;
+         global $OUTPUT;
+        // Make DOM parser globally accessible for console usage
+        $this->page->requires->js_call_amd(
+            'block_helpchat/dom_parser',
+            'makeGloballyAccessible'
+        );
+        $this->page->requires->js_call_amd(
+            'block_helpchat/form_integration',
+            'initFormIntegration',
+            ['form-analysis-data']
+        );
         return $OUTPUT->render_from_template('block_helpchat/helpchat_form', $data);
     }
 
