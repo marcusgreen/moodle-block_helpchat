@@ -43,3 +43,10 @@ block_helpchat .message_agent {
     border-left: 4px solid #ccc;
 }
 
+/* Spinner styles */
+.helpchat-spinner {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+

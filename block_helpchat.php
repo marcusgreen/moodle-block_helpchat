@@ -141,6 +141,11 @@ class block_helpchat extends block_base {
             'initFormIntegration',
             ['form-analysis-data']
         );
+        // Initialize spinner functionality
+        $this->page->requires->js_call_amd(
+            'block_helpchat/spinner',
+            'initSpinner'
+        );
         return $OUTPUT->render_from_template('block_helpchat/helpchat_form', $data);
     }
 
