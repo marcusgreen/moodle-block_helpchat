@@ -8,7 +8,12 @@
         {{/isquestionediting}}
         <textarea name="helpchat_message" id="helpchat-message" placeholder="{{messageplaceholder}}" class="helpchat-textarea" rows="5"></textarea>
         <br>
-        <button type="submit" class="helpchat-submit btn btn-primary">{{submitbutton}}</button>
+        <button type="submit" class="helpchat-submit btn btn-primary">
+            <span class="block_helpchatt-sparkles-icon">
+                    {{#pix}} sparkles, block_helpchat {{/pix}}
+            </span>
+            {{submitbutton}}
+        </button>
     </div>
 </form>
 {{#response}}
