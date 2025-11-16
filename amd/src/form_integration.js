@@ -16,7 +16,7 @@
 /**
  * Moodle form integration for DOM parser
  *
- * @module     block_ai_chat/form_integration
+ * @module     block_helpchat/form_integration
  * @copyright  2025 ISB Bayern
  * @author     Dr. Peter Mayer
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -64,7 +64,7 @@ const setupIntegration = async (hiddenFieldId, options, debounceMs) => {
         const cleanup = autoPopulateHiddenField(hiddenFieldId, options, debounceMs);
 
         // Store cleanup function for later use
-        window.M.block_ai_chat.cleanupFormIntegration = cleanup;
+        window.M.block_helpchat.cleanupFormIntegration = cleanup;
 
         // Handle form submission
         const form = document.querySelector('form.moodleform');
@@ -159,12 +159,12 @@ export const getFormSummary = (hiddenFieldId) => {
 };
 
 // Initialize Moodle namespace if it doesn't exist
-if (typeof M.block_ai_chat === 'undefined') {
-    M.block_ai_chat = {};
+if (typeof M.block_helpchat === 'undefined') {
+    M.block_helpchat = {};
 }
 
 // Export functions to Moodle namespace
-M.block_ai_chat.initFormIntegration = initFormIntegration;
-M.block_ai_chat.populateFormAnalysis = populateFormAnalysis;
-M.block_ai_chat.getCurrentFormAnalysis = getCurrentFormAnalysis;
-M.block_ai_chat.getFormSummary = getFormSummary;
+M.block_helpchat.initFormIntegration = initFormIntegration;
+M.block_helpchat.populateFormAnalysis = populateFormAnalysis;
+M.block_helpchat.getCurrentFormAnalysis = getCurrentFormAnalysis;
+M.block_helpchat.getFormSummary = getFormSummary;

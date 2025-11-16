@@ -50,3 +50,8 @@ block_helpchat .message_agent {
     gap: 8px;
 }
 
+/* Sparkles icon styles */
+.block_helpchat-sparkles-icon {
+    margin-right: 5px;
+}
+
