@@ -30,7 +30,7 @@ if ($ADMIN->fulltree) {
         'local_ai_manager' => 'Local AI Manager',
         'tool_aimanager' => 'Tool AI Manager'
     ];
-    
+
     $settings->add(new admin_setting_configselect(
         'block_helpchat/backend',
         get_string('aibackend', 'block_helpchat'),
@@ -38,7 +38,7 @@ if ($ADMIN->fulltree) {
         'core_ai_subsystem',
         $options
     ));
-    
+
     $settings->add(new admin_setting_configtextarea(
         'block_helpchat/prompt',
         get_string('prompt', 'block_helpchat'),
@@ -46,4 +46,5 @@ if ($ADMIN->fulltree) {
         get_string('defaultprompt', 'block_helpchat'),
         PARAM_TEXT
     ));
+
 }

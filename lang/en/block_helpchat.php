@@ -35,6 +35,11 @@ $string['aibackend_desc'] = 'Select which AI backend to use for processing reque
 $string['prompt'] = 'System Prompt';
 $string['prompt_help'] = 'This text will be prepended to all user messages before sending to the AI. Use this to provide context or instructions to the AI.';
 $string['prompt_desc'] = 'This text will be prepended to all user messages before sending to the AI. Use this to provide context or instructions to the AI.';
-$string['defaultprompt'] = 'You are a helpful assistant in a learning management system. Please provide helpful and educational responses.';
-$string['questioneditingprompt'] = 'You are an AI assistant helping with question editing in a learning management system. Provide helpful feedback on question quality, suggest improvements, check for clarity and educational value, and ensure questions align with learning objectives.';
+$string['defaultprompt'] = 'Only answer questions relating to the Moodle stack question type or maths. Assume you are already \n
+     in the question editing form.Be as accurate as possible. Use rand_with_step where possible for questions about random numbers.\n
+     Don’t remind to use plaintext. When adding a second node question must be saved first. Populate model answers with pre-calculated\n
+     variables if possible. When displaying the content of a variable e.g. X in the Question text use the style {@x@}';
+$string['questioneditingprompt'] = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.';
+$string['defaultpromptsetting'] = 'Default Prompt';
+$string['defaultpromptsetting_desc'] = 'Prompt that each instance of a block is initialised with.';
 $string['privacy:metadata'] = 'The Help Chat block does not store any personal data.';

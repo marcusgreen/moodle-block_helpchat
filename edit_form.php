@@ -50,7 +50,8 @@ class block_helpchat_edit_form extends block_edit_form {
         $mform->addElement('textarea', 'config_prompt', get_string('prompt', 'block_helpchat'),
             array('rows' => 5, 'cols' => 50));
         $mform->setType('config_prompt', PARAM_TEXT);
-        $mform->setDefault('config_prompt', get_string('defaultprompt', 'block_helpchat'));
+        xdebug_break();
+        $mform->setDefault('config_prompt', get_config('block_helpchat', 'prompt') ?: get_string('defaultprompt', 'block_helpchat'));
         $mform->addHelpButton('config_prompt', 'prompt', 'block_helpchat');
     }
 }

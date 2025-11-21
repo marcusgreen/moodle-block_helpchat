@@ -63,11 +63,12 @@ class block_helpchat extends block_base {
         $formdata = optional_param('form_analysis_data', '', PARAM_TEXT);
         if (!empty($message)) {
             try {
+                xdebug_break();
                 // Prepare the full prompt with system instructions
                 $fullprompt = $this->prepare_prompt($message, $questionediting);
-                $fullprompt = 'formdata is :' . $formdata . ':' . $fullprompt;
+                //$fullprompt = 'formdata is :' . $formdata . ':' . $fullprompt;
                 $response = $this->perform_request($fullprompt, 'helpchat');
-                
+
                 // Convert markdown to HTML if response contains markdown
                 if (!empty($response)) {
                     require_once($CFG->libdir . '/weblib.php');
@@ -108,10 +109,10 @@ class block_helpchat extends block_base {
         } else {
             // Use question editing prompt if in question editing context
             if ($questionediting) {
-                $prompt = get_string('questioneditingprompt', 'block_helpchat');
+                $prompt = get_config('block_helpchat', 'prompt');
             } else {
                 // Fallback to global config prompt
-                $globalprompt = get_config('block_helpchat', 'prompt');
+                $globalprompt = get_string('prompt', 'block_helpchat');
                 if (!empty($globalprompt)) {
                     $prompt = $globalprompt;
                 }
@@ -169,6 +170,7 @@ class block_helpchat extends block_base {
         if (defined('BEHAT_SITE_RUNNING') || (defined('PHPUNIT_TEST') && PHPUNIT_TEST)) {
             return "AI Response to: " . $fullprompt;
         }
+            xdebug_break();
 
         // Try to get backend from config or use a default
         $backend = get_config('block_helpchat', 'backend');
